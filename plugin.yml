@@ -1,0 +1,15 @@
+name: ejson2env Buildkite Plugin
+description: Export environment variables stored & encrypted in EJSON files to the environment
+author: https://github.com/envato
+requirements:
+  - jq
+configuration:
+  properties:
+    ejson_file:
+      type: string
+    ejson_private_key_env_key:
+      type: string
+  required:
+    - ejson_file
+    - ejson_private_key_env_key
+  additionalProperties: false
