@@ -2,7 +2,6 @@
 
 load '/usr/local/lib/bats/load.bash'
 
-export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY="EJSON_PRIVATE_KEY"
 export EJSON_PRIVATE_KEY
 export EJSON2ENV_TEST_MODE=true
 
@@ -28,6 +27,8 @@ run_environment_hook_with_fixture() {
 }
 
 setup() {
+  export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY="EJSON_PRIVATE_KEY"
+  unset BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE
   unset EJSON2ENV_TEST_VERIFY_KEY
   unset EJSON2ENV_TEST_VERIFY_VALUE
 }
@@ -45,5 +46,13 @@ setup() {
 line2
 line3"
   run_environment_hook_with_fixture multiline
+  assert_success
+}
+
+@test "can use a different ejson file with EJSON_FILE" {
+  export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE="ejson_build_secrets.ejson"
+  export EJSON2ENV_TEST_VERIFY_KEY=A_SECRET
+  export EJSON2ENV_TEST_VERIFY_VALUE="hoop vervain headway betimes finn allied standard softwood"
+  run_environment_hook_with_fixture ejson_file_specified
   assert_success
 }
