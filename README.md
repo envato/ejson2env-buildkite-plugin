@@ -1,6 +1,6 @@
 # ejson2env Buildkite Plugin
 
-A Buildkite plugin to export environment variables that are stored inside an [ejson] file using [ejson2env].
+A Buildkite plugin for exporting environment variables stored inside [ejson](https://github.com/Shopify/ejson) files using [ejson2env](https://github.com/Shopify/ejson2env).
 
 ## Example
 
