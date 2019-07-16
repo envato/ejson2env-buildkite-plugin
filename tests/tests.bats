@@ -19,6 +19,7 @@ ejson_private_key() {
 
 run_environment_hook_with_fixture() {
   local fixture="$1"
+  export EJSON_PRIVATE_KEY
   EJSON_PRIVATE_KEY=$(ejson_private_key "$fixture")
   pushd "$PWD/tests/fixtures/$fixture" || exit 1
   run "${environment_hook}"
@@ -26,7 +27,8 @@ run_environment_hook_with_fixture() {
 }
 
 setup() {
-  export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY="EJSON_PRIVATE_KEY"
+  unset BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY
+  unset EJSON_PRIVATE_KEY
   unset EJSON2ENV_TEST_VERIFY_KEY
   unset EJSON2ENV_TEST_VERIFY_VALUE
 }
