@@ -8,7 +8,7 @@ A Buildkite plugin for exporting environment variables stored inside [ejson](htt
 steps:
   - name: Tests
     plugins:
-      - envato/ejson2env#master
+      - envato/ejson2env#v0.1.0
 ```
 
 ## Configuration
