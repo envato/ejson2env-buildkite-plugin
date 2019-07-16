@@ -68,3 +68,9 @@ line3"
   popd || exit 1
   assert_success
 }
+
+@test "exits when ejson_file doesn't exist" {
+  export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE="unknown.ejson"
+  run_environment_hook_with_fixture simple
+  assert_failure
+}
