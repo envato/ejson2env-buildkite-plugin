@@ -21,7 +21,8 @@ run_hook_with_fixture() {
   local fixture="$1"
   export EJSON_PRIVATE_KEY
   EJSON_PRIVATE_KEY=$(ejson_private_key "$fixture")
-  pushd "$PWD/tests/fixtures/$fixture" || exit 1
+  # shellcheck disable=SC2164
+  pushd "$PWD/tests/fixtures/$fixture"
   run "${post_checkout_hook}"
   popd || exit 1
 }
@@ -65,9 +66,9 @@ line3"
   export EJSON2ENV_TEST_VERIFY_VALUE="hoop vervain headway betimes finn allied standard softwood"
 
   export MY_PRIVATE_KEY=$(ejson_private_key simple)
-  pushd "$PWD/tests/fixtures/simple" || exit 1
+  pushd "$PWD/tests/fixtures/simple"
   run "${post_checkout_hook}"
-  popd || exit 1
+  popd
   assert_success
 }
 
@@ -82,9 +83,9 @@ line3"
   export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY="MY_PRIVATE_KEY"
 
   unset MY_PRIVATE_KEY
-  pushd "$PWD/tests/fixtures/simple" || exit 1
+  pushd "$PWD/tests/fixtures/simple"
   run "${post_checkout_hook}"
-  popd || exit 1
+  popd
   assert_failure
   assert_output "ejson_private_key_env_key \"MY_PRIVATE_KEY\" is empty or not set"
 }
@@ -92,9 +93,9 @@ line3"
 @test "fails when decryption fails" {
   # incorrect private key
   export EJSON_PRIVATE_KEY="c12d273dbb5c688a25029014fffc52573cef55884a4f62ffcdc297d18f4fde7f"
-  pushd "$PWD/tests/fixtures/simple" || exit 1
+  pushd "$PWD/tests/fixtures/simple"
   run "${post_checkout_hook}"
-  popd || exit 1
+  popd
   assert_failure
   assert_line "error: could not load ejson file: couldn't decrypt message"
   assert_line "Failed to export EJSON secrets from .buildkite/secrets.ejson"
