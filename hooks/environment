@@ -1,1 +1,18 @@
 #!/usr/bin/env bash
+
+set -euo pipefail
+
+EJSON2ENV_PLUGIN_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")"; cd ..; pwd)
+EJSON2ENV_BIN_PATH="$EJSON2ENV_PLUGIN_ROOT/ejson2env"
+
+ejson_exports() {
+  echo "${!BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY}" | \
+    $EJSON2ENV_BIN_PATH --key-from-stdin "$BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE"
+}
+
+if [ "${EJSON2ENV_TEST_MODE:-false}" == "true" ]; then
+  ejson_exports
+fi
+
+# shellcheck disable=SC1091
+ejson_exports | source /dev/stdin

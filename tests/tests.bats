@@ -9,6 +9,7 @@ run_environment_hook() {
 
 export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY="EJSON_PRIVATE_KEY"
 export EJSON_PRIVATE_KEY
+export EJSON2ENV_TEST_MODE=true
 
 setup_fixture() {
   local fixture="$1"
@@ -25,4 +26,5 @@ setup_fixture() {
 @test "exports environment vars" {
   setup_fixture simple
   run_environment_hook
+  assert_output "export A_SECRET='hoop vervain headway betimes finn allied standard softwood'"
 }
