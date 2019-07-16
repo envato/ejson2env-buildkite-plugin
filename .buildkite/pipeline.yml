@@ -1,0 +1,7 @@
+steps:
+  - label: ":hammer: Test"
+    plugins:
+      - docker-compose#v3.0.3:
+          run: "tests"
+    agents:
+      queue: "${AGENT_QUEUE}"
