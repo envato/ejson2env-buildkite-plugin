@@ -5,3 +5,17 @@ steps:
           run: "tests"
     agents:
       queue: "${AGENT_QUEUE}"
+
+  - label: ":sparkles: Lint"
+    plugins:
+      - docker-compose#v3.0.3:
+          run: "lint"
+    agents:
+      queue: "${AGENT_QUEUE}"
+
+  - label: ":hammer: Shellcheck"
+    plugins:
+      - docker-compose#v3.0.3:
+          run: "shellcheck"
+    agents:
+      queue: "${AGENT_QUEUE}"
