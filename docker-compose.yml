@@ -9,3 +9,9 @@ services:
     command: ["--id", "envato/ejson2env"]
     volumes:
       - ".:/plugin:ro"
+  shellcheck:
+    image: koalaman/shellcheck
+    command: ["--color=always", "hooks/post-checkout"]
+    working_dir: /plugin
+    volumes:
+      - ".:/plugin:ro"
