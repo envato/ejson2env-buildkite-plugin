@@ -75,4 +75,27 @@ line3"
   export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE="unknown.ejson"
   run_pre_commmand_hook_with_fixture simple
   assert_failure
+  assert_output "ejson_file not found at \"unknown.ejson\""
+}
+
+@test "exits when ejson_file doesn't exist" {
+  export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY="MY_PRIVATE_KEY"
+
+  unset MY_PRIVATE_KEY
+  pushd "$PWD/tests/fixtures/simple" || exit 1
+  run "${pre_command_hook}"
+  popd || exit 1
+  assert_failure
+  assert_output "ejson_private_key_env_key \"MY_PRIVATE_KEY\" is empty or not set"
+}
+
+@test "fails when decryption fails" {
+  # incorrect private key
+  export EJSON_PRIVATE_KEY="c12d273dbb5c688a25029014fffc52573cef55884a4f62ffcdc297d18f4fde7f"
+  pushd "$PWD/tests/fixtures/simple" || exit 1
+  run "${pre_command_hook}"
+  popd || exit 1
+  assert_failure
+  assert_line "error: could not load ejson file: couldn't decrypt message"
+  assert_line "Failed to export EJSON secrets from .buildkite/secrets.ejson"
 }
