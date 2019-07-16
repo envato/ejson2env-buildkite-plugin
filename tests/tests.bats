@@ -72,14 +72,14 @@ line3"
   assert_success
 }
 
-@test "exits when ejson_file doesn't exist" {
+@test "fails when ejson_file doesn't exist" {
   export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE="unknown.ejson"
   run_hook_with_fixture simple
   assert_failure
   assert_output "ejson_file not found at \"unknown.ejson\""
 }
 
-@test "exits when ejson_file doesn't exist" {
+@test "fails when ejson_private_key_env_key is empty" {
   export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY="MY_PRIVATE_KEY"
 
   unset MY_PRIVATE_KEY
