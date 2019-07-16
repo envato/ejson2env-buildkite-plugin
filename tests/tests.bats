@@ -5,7 +5,7 @@ load '/usr/local/lib/bats/load.bash'
 export EJSON_PRIVATE_KEY
 export EJSON2ENV_TEST_MODE=true
 
-pre_command_hook="$PWD/hooks/pre-command"
+post_checkout_hook="$PWD/hooks/post-checkout"
 
 ejson_private_key() {
   local private_key_file="$PWD/tests/fixtures/$1/ejson_private_key"
@@ -17,12 +17,12 @@ ejson_private_key() {
   fi
 }
 
-run_pre_commmand_hook_with_fixture() {
+run_hook_with_fixture() {
   local fixture="$1"
   export EJSON_PRIVATE_KEY
   EJSON_PRIVATE_KEY=$(ejson_private_key "$fixture")
   pushd "$PWD/tests/fixtures/$fixture" || exit 1
-  run "${pre_command_hook}"
+  run "${post_checkout_hook}"
   popd || exit 1
 }
 
@@ -36,7 +36,7 @@ setup() {
 @test "exports simple environment vars" {
   export EJSON2ENV_TEST_VERIFY_KEY=A_SECRET
   export EJSON2ENV_TEST_VERIFY_VALUE="hoop vervain headway betimes finn allied standard softwood"
-  run_pre_commmand_hook_with_fixture simple
+  run_hook_with_fixture simple
   assert_success
 }
 
@@ -45,7 +45,7 @@ setup() {
   export EJSON2ENV_TEST_VERIFY_VALUE="line1
 line2
 line3"
-  run_pre_commmand_hook_with_fixture multiline
+  run_hook_with_fixture multiline
   assert_success
 }
 
@@ -54,7 +54,7 @@ line3"
 
   export EJSON2ENV_TEST_VERIFY_KEY=A_SECRET
   export EJSON2ENV_TEST_VERIFY_VALUE="hoop vervain headway betimes finn allied standard softwood"
-  run_pre_commmand_hook_with_fixture ejson_file_specified
+  run_hook_with_fixture ejson_file_specified
   assert_success
 }
 
@@ -66,14 +66,14 @@ line3"
 
   export MY_PRIVATE_KEY=$(ejson_private_key simple)
   pushd "$PWD/tests/fixtures/simple" || exit 1
-  run "${pre_command_hook}"
+  run "${post_checkout_hook}"
   popd || exit 1
   assert_success
 }
 
 @test "exits when ejson_file doesn't exist" {
   export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE="unknown.ejson"
-  run_pre_commmand_hook_with_fixture simple
+  run_hook_with_fixture simple
   assert_failure
   assert_output "ejson_file not found at \"unknown.ejson\""
 }
@@ -83,7 +83,7 @@ line3"
 
   unset MY_PRIVATE_KEY
   pushd "$PWD/tests/fixtures/simple" || exit 1
-  run "${pre_command_hook}"
+  run "${post_checkout_hook}"
   popd || exit 1
   assert_failure
   assert_output "ejson_private_key_env_key \"MY_PRIVATE_KEY\" is empty or not set"
@@ -93,7 +93,7 @@ line3"
   # incorrect private key
   export EJSON_PRIVATE_KEY="c12d273dbb5c688a25029014fffc52573cef55884a4f62ffcdc297d18f4fde7f"
   pushd "$PWD/tests/fixtures/simple" || exit 1
-  run "${pre_command_hook}"
+  run "${post_checkout_hook}"
   popd || exit 1
   assert_failure
   assert_line "error: could not load ejson file: couldn't decrypt message"
