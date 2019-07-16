@@ -5,7 +5,7 @@ load '/usr/local/lib/bats/load.bash'
 export EJSON_PRIVATE_KEY
 export EJSON2ENV_TEST_MODE=true
 
-environment_hook="$PWD/hooks/environment"
+pre_command_hook="$PWD/hooks/pre-command"
 
 ejson_private_key() {
   local private_key_file="$PWD/tests/fixtures/$1/ejson_private_key"
@@ -17,12 +17,12 @@ ejson_private_key() {
   fi
 }
 
-run_environment_hook_with_fixture() {
+run_pre_commmand_hook_with_fixture() {
   local fixture="$1"
   export EJSON_PRIVATE_KEY
   EJSON_PRIVATE_KEY=$(ejson_private_key "$fixture")
   pushd "$PWD/tests/fixtures/$fixture" || exit 1
-  run "${environment_hook}"
+  run "${pre_command_hook}"
   popd || exit 1
 }
 
@@ -36,7 +36,7 @@ setup() {
 @test "exports simple environment vars" {
   export EJSON2ENV_TEST_VERIFY_KEY=A_SECRET
   export EJSON2ENV_TEST_VERIFY_VALUE="hoop vervain headway betimes finn allied standard softwood"
-  run_environment_hook_with_fixture simple
+  run_pre_commmand_hook_with_fixture simple
   assert_success
 }
 
@@ -45,7 +45,7 @@ setup() {
   export EJSON2ENV_TEST_VERIFY_VALUE="line1
 line2
 line3"
-  run_environment_hook_with_fixture multiline
+  run_pre_commmand_hook_with_fixture multiline
   assert_success
 }
 
@@ -54,7 +54,7 @@ line3"
 
   export EJSON2ENV_TEST_VERIFY_KEY=A_SECRET
   export EJSON2ENV_TEST_VERIFY_VALUE="hoop vervain headway betimes finn allied standard softwood"
-  run_environment_hook_with_fixture ejson_file_specified
+  run_pre_commmand_hook_with_fixture ejson_file_specified
   assert_success
 }
 
@@ -66,13 +66,13 @@ line3"
 
   export MY_PRIVATE_KEY=$(ejson_private_key simple)
   pushd "$PWD/tests/fixtures/simple" || exit 1
-  run "${environment_hook}"
+  run "${pre_command_hook}"
   popd || exit 1
   assert_success
 }
 
 @test "exits when ejson_file doesn't exist" {
   export BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE="unknown.ejson"
-  run_environment_hook_with_fixture simple
+  run_pre_commmand_hook_with_fixture simple
   assert_failure
 }
