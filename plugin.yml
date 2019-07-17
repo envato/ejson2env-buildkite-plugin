@@ -8,7 +8,4 @@ configuration:
       type: string
     ejson_private_key_env_key:
       type: string
-  required:
-    - ejson_file
-    - ejson_private_key_env_key
   additionalProperties: false
