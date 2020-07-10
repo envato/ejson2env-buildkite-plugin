@@ -13,6 +13,20 @@ steps:
           ejson_private_key_env_key: EJSON_PRIVATE_KEY
 ```
 
+if you have more than one ejson file, you could load them all:
+
+```yml
+steps:
+  - name: Tests
+    plugins:
+      - envato/ejson2env#v0.1.0:
+          ejson_file: /var/lib/buildkite-agent/secrets.ejson
+          ejson_private_key_env_key: EJSON_GLOBAL_PRIVATE_KEY
+      - envato/ejson2env#v0.1.0:
+          ejson_file: .buildkite/secrets.ejson
+          ejson_private_key_env_key: EJSON_LOCAL_PRIVATE_KEY
+```
+
 ## Configuration
 
 ### `ejson_file` (optional)
