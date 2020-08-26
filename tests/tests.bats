@@ -97,6 +97,6 @@ line3"
   run "${post_checkout_hook}"
   popd
   assert_failure
-  assert_line "error: could not load ejson file: couldn't decrypt message"
+  assert_line "error: could not load environment from file: could not load ejson file: couldn't decrypt message"
   assert_line "Failed to export EJSON secrets from .buildkite/secrets.ejson"
 }
