@@ -3,8 +3,7 @@
 set -euo pipefail
 
 EJSON2ENV_PLUGIN_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")"; cd ..; pwd)
-arch="${BUILDKITE_PLUGIN_EJSON2ENV_ARCH:-}"
-if [[ -z "$arch" ]] && [[ "$(arch)" == "aarch64" ]]; then
+if [[ "$(arch)" == "aarch64" ]]; then
   arch="arm64"
 else
   arch="x86_64"
