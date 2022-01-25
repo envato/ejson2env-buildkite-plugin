@@ -3,7 +3,19 @@
 set -euo pipefail
 
 EJSON2ENV_PLUGIN_ROOT=$(cd "$(dirname "${BASH_SOURCE[0]}")"; cd ..; pwd)
-EJSON2ENV_BIN_PATH="$EJSON2ENV_PLUGIN_ROOT/ejson2env"
+arch="$(arch)"
+case "$arch" in
+  arm*|aarch64)
+    arch="arm64";;
+  x86_64|amd64)
+    arch="amd64";;
+  *)
+    echo "Unsupported architecture: $arch"
+    exit 1
+esac
+
+EJSON2ENV_BIN_PATH="$EJSON2ENV_PLUGIN_ROOT/ejson2env-${arch}"
+
 BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE="${BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE:-.buildkite/secrets.ejson}"
 BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY="${BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY:-EJSON_PRIVATE_KEY}"
 
