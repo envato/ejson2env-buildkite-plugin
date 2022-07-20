@@ -10,7 +10,7 @@ A Buildkite plugin for exporting environment variables stored inside [ejson](htt
 steps:
   - name: Tests
     plugins:
-      - envato/ejson2env#v0.2.0:
+      - envato/ejson2env#v0.3.0:
           ejson_file: .buildkite/secrets.ejson
           ejson_private_key_env_key: EJSON_PRIVATE_KEY
 ```
