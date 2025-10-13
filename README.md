@@ -29,6 +29,22 @@ The environment variable containing the private key to decrypt the EJSON file.
 
 Default: `EJSON_PRIVATE_KEY`
 
+### `download_ejson_file_artifacts` (optional)
+
+Download ejson artifacts (`**/*.ejson`) from previous build steps before decryption. This is useful when ejson files are generated or stored as artifacts in earlier pipeline steps.
+
+Default: `false`
+
+Example:
+
+```yml
+steps:
+  - name: Tests
+    plugins:
+      - envato/ejson2env#v0.3.0:
+          download_ejson_file_artifacts: true
+```
+
 ## License
 
 MIT (see [LICENSE](LICENSE))

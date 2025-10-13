@@ -42,8 +42,13 @@ BUILDKITE_PLUGIN_EJSON2ENV_DOWNLOAD_EJSON_FILE_ARTIFACTS="${BUILDKITE_PLUGIN_EJS
 
 download_artifacts() {
   if [[ "$BUILDKITE_PLUGIN_EJSON2ENV_DOWNLOAD_EJSON_FILE_ARTIFACTS" == "true" ]]; then
-    echo "Downloading ejson artifacts..."
-    buildkite-agent artifact download "**/*.ejson" .
+    echo "Searching for ejson artifacts..."
+    if buildkite-agent artifact search "**/*.ejson" --step "*" > /dev/null 2>&1; then
+      echo "Downloading ejson artifacts..."
+      buildkite-agent artifact download "**/*.ejson" .
+    else
+      echo "No ejson artifacts found to download"
+    fi
   fi
 }
 

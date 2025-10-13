@@ -106,7 +106,10 @@ line3"
 
   # Mock buildkite-agent command
   function buildkite-agent() {
-    if [[ "$1" == "artifact" ]] && [[ "$2" == "download" ]]; then
+    if [[ "$1" == "artifact" ]] && [[ "$2" == "search" ]]; then
+      echo "secrets.ejson"
+      return 0
+    elif [[ "$1" == "artifact" ]] && [[ "$2" == "download" ]]; then
       echo "Downloaded artifacts matching $3"
       return 0
     fi
@@ -117,6 +120,7 @@ line3"
   export EJSON2ENV_TEST_VERIFY_VALUE="hoop vervain headway betimes finn allied standard softwood"
   run_hook_with_fixture simple
   assert_success
+  assert_line "Searching for ejson artifacts..."
   assert_line "Downloading ejson artifacts..."
   assert_line "Downloaded artifacts matching **/*.ejson"
 }
@@ -136,5 +140,25 @@ line3"
   export EJSON2ENV_TEST_VERIFY_VALUE="hoop vervain headway betimes finn allied standard softwood"
   run_hook_with_fixture simple
   assert_success
+  refute_line "Downloading ejson artifacts..."
+}
+
+@test "handles gracefully when no artifacts are found" {
+  export BUILDKITE_PLUGIN_EJSON2ENV_DOWNLOAD_EJSON_FILE_ARTIFACTS="true"
+
+  # Mock buildkite-agent command - search returns no results
+  function buildkite-agent() {
+    if [[ "$1" == "artifact" ]] && [[ "$2" == "search" ]]; then
+      return 1
+    fi
+  }
+  export -f buildkite-agent
+
+  export EJSON2ENV_TEST_VERIFY_KEY=A_SECRET
+  export EJSON2ENV_TEST_VERIFY_VALUE="hoop vervain headway betimes finn allied standard softwood"
+  run_hook_with_fixture simple
+  assert_success
+  assert_line "Searching for ejson artifacts..."
+  assert_line "No ejson artifacts found to download"
   refute_line "Downloading ejson artifacts..."
 }
