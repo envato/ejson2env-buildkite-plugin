@@ -8,4 +8,6 @@ configuration:
       type: string
     ejson_private_key_env_key:
       type: string
+    download_ejson_file_artifacts:
+      type: boolean
   additionalProperties: false

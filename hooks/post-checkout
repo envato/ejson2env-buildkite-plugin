@@ -38,6 +38,14 @@ fi
 
 BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE="${BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE:-.buildkite/secrets.ejson}"
 BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY="${BUILDKITE_PLUGIN_EJSON2ENV_EJSON_PRIVATE_KEY_ENV_KEY:-EJSON_PRIVATE_KEY}"
+BUILDKITE_PLUGIN_EJSON2ENV_DOWNLOAD_EJSON_FILE_ARTIFACTS="${BUILDKITE_PLUGIN_EJSON2ENV_DOWNLOAD_EJSON_FILE_ARTIFACTS:-false}"
+
+download_artifacts() {
+  if [[ "$BUILDKITE_PLUGIN_EJSON2ENV_DOWNLOAD_EJSON_FILE_ARTIFACTS" == "true" ]]; then
+    echo "Downloading ejson artifacts..."
+    buildkite-agent artifact download "**/*.ejson" .
+  fi
+}
 
 validate_config() {
   if [ ! -f "${BUILDKITE_PLUGIN_EJSON2ENV_EJSON_FILE}" ]; then
@@ -65,6 +73,7 @@ export_secrets() {
   fi
 }
 
+download_artifacts
 validate_config
 export_secrets
 
